@@ -1,0 +1,28 @@
+{% extends 'layout2.html' %}
+
+
+        {% block container %}
+        {% import "_macros.html" as macros%}
+            <h1>Hola desde Alumnos</h1>
+            <!-- <h1>Escuela: {{titulo}}</h1> -->
+
+            <form action="" method="POST">
+                {{macros.datos("nombre","NOMBRE")}}
+                {{macros.datos("aPaterno","APELLIDO PATERNO")}}
+                {{macros.datos("aMaterno","APELLIDO MATERNO")}}
+                
+                <!-- {{macros.datos("edad", "EDAD")}} -->
+                {{macros.camposNuevos(form.edad)}}
+                {{macros.camposNuevos(form.email)}}
+                <input type="submit">
+            </form>
+            <!-- {{form.nombre}} -->
+            
+            <h1>Nombre: {{nom}}</h1>
+            <h2>A Paterno: {{apa}}</h2>
+            <h2>A Materno: {{ama}}</h2>
+            <h2>Email: {{email}}</h2>
+            <h2>Edad: {{edad}}</h2>
+
+        {% endblock %}
+            
