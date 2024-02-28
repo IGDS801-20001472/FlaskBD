@@ -4,9 +4,10 @@ from flask import flash
 from flask_wtf.csrf import CSRFProtect
 from wtforms import validators
 from flask import g
-from config import DevelopmentCondfig
+from config import DevelopmentConfig
 
-
+from models import db
+from models import Alumnos
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -21,9 +22,31 @@ def page_not_found(e):
 
 
 @app.route("/")
-def index():
+def nose():
     return render_template("layout2.html")
 
+
+
+@app.route("/index", methods = ['GET', 'POST'])
+def index():
+    create_form = forms.UserForm2(request.form)
+    if request.method == 'POST':
+        alum = Alumnos(nombre = create_form.nombre.data, 
+                       ape_paterno = create_form.aPaterno.data, 
+                       email = create_form.email.data)
+        #insert alumnos() values()
+        db.session.add(alum)
+        db.session.commit()
+    return render_template("index.html", form = create_form)
+
+
+@app.route("/ABC_Completo", methods = ["GET", "POST"])
+def ABCompleto():
+    alum_form = forms.UserForm2(request.form)
+    alumno = Alumnos.query.all()
+    print(alumnos)
+
+    return render_template("ABC_Completo.html", alumnos = alumno)
 
 
 
@@ -56,35 +79,14 @@ def alumnos():
 def maestros():
     return render_template("Maestros.html")
 
-@app.route("/hola")
-def hola():
-    return "<h1>Saludos desde Hola</h1>"
-
-@app.route("/saludo")
-def saludo():
-    return "<h1>Saludos desde Saludo</h1>"
-
-@app.route("/nombre/<string:nom>")
-def func(nom):
-    return "Hola " + nom
-
-@app.route("/numero/<int:n1>")
-def numero(n1):
-    return "Numero: {}".format(n1)
-
-@app.route("/user/<int:id>/<string:nombre>")
-def usuario(id, nombre):
-    return "ID: {} Nombre: {}".format(id, nombre)
-
-@app.route("/suma/<int:num1>/<int:num2>")
-def suma(num1, num2):
-    return "La suma de {} + {} = {}".format(num1, num2, num1 + num2)
-
-
 
 
 
 
 if __name__ == "__main__":
     csrf.init_app(app)
+    db.init_app(app)
+
+    with app.app_context():
+        db.create_all()
     app.run()
