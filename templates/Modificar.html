@@ -1,13 +1,15 @@
-
 {% extends 'layout.html' %}
 
-
-
-        {% block container %}
+{% block container %}
 
         {% import "_macros.html" as macros%}
         <div class="row">
-            <form name="sent" action="/index" id="contactForm" method="POST">
+            <form name="sent" action="/Modificar" id="contactForm" method="POST">
+                <div class="row control-group">
+                    <div class="form-group col-xs-12 float-label-form-group controls">
+                        {{macros.camposNuevos(form.id, class= 'form-control') }}
+                    </div>
+                </div>
                 <div class="row control-group">
                     <div class="form-group col-xs-12 float-label-form-group controls">
                         {{macros.camposNuevos(form.nombre, class= 'form-control') }}
@@ -25,8 +27,10 @@
                         {{macros.camposNuevos(form.email, class= 'form-control') }}
                     </div>
                 </div>
-                <input type="hidden" name = "csrf_token" value="{{ csrf_token() }}">
-                <input type="submit" id="send-signup" name="signup" value="Registrar">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="submit" class="btn btn-danger" id="Modificar"
+                name="Modificar" value="Modificar">
+            </div>
             </form>
         </div>
         {% endblock %}

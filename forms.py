@@ -18,6 +18,6 @@ class UserForm2(Form):
         validators.length(min=4, max=10, message="ingresa nombre valido")
         ])
     email = EmailField('email', [validators.Email(message="Ingrese un correo Valido")])
-    aPaterno = TelField('apaterno')
+    ape_paterno = TelField('apaterno')
     
     

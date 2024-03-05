@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import forms
 from flask import flash
 from flask_wtf.csrf import CSRFProtect
@@ -32,7 +32,7 @@ def index():
     create_form = forms.UserForm2(request.form)
     if request.method == 'POST':
         alum = Alumnos(nombre = create_form.nombre.data, 
-                       ape_paterno = create_form.aPaterno.data, 
+                       ape_paterno = create_form.ape_paterno.data, 
                        email = create_form.email.data)
         #insert alumnos() values()
         db.session.add(alum)
@@ -75,11 +75,48 @@ def alumnos():
 
     return render_template("Alumnos.html", form = alumno_clase, nom=nom, apa=apa, ama=ama, edad=edad, email=email)
 
-@app.route("/maestros")
-def maestros():
-    return render_template("Maestros.html")
+@app.route("/Eliminar", methods = ['GET', 'POST'])
+def Eliminar():
+    create_form = forms.UserForm2(request.form)
+    if request.method == 'GET':
+        id = request.args.get('id')
+        #select from alumnos where id == id
+        alum1 = db.session.query(Alumnos).filter(Alumnos.id == id).first()
+        create_form.id.data = request.args.get('id')
+        create_form.nombre.data = alum1.nombre
+        create_form.ape_paterno.data = alum1.ape_paterno
+        create_form.email.data = alum1.email
+    if request.method == 'POST':
+        id = create_form.id.data
+        alum = Alumnos.query.get(id)
+        #delete from alumnos where id= id
+        db.session.delete(alum)
+        db.session.commit()
+        return redirect(url_for('ABCompleto'))
+    return render_template("Eliminar.html", form = create_form)
 
 
+@app.route("/Modificar", methods = ['GET', 'POST'])
+def Modificar():
+    create_form = forms.UserForm2(request.form)
+    if request.method == 'GET':
+        id = request.args.get('id')
+        #select from alumnos where id == id
+        alum1 = db.session.query(Alumnos).filter(Alumnos.id == id).first()
+        create_form.id.data = request.args.get('id')
+        create_form.nombre.data = alum1.nombre
+        create_form.ape_paterno.data = alum1.ape_paterno
+        create_form.email.data = alum1.email
+    if request.method == 'POST':
+        id = create_form.id.data
+        alum1 = db.session.query(Alumnos).filter(Alumnos.id == id).first()
+        alum1.nombre = create_form.nombre.data
+        alum1.ape_paterno = create_form.ape_paterno.data 
+        alum1.email = create_form.email.data 
+        db.session.add(alum1)
+        db.session.commit()
+        return redirect(url_for('ABCompleto'))
+    return render_template("Modificar.html", form = create_form)
 
 
 
